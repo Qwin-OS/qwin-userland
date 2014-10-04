@@ -1,39 +1,41 @@
-#include <stdio.h> 
-#include "version.h"
+#include <stdio.h>
+#include <sys/utsname.h>
+
+struct utsname u;
 
 void print_kernel_name()
 {
-  fprintf(stdout, "%s ",UNAME);
+  fprintf(stdout, "%s ",u.sysname);
 }
 
 void print_node_name()
 {
-  fprintf(stdout, "localhost ");
+  fprintf(stdout, "%s ",u.nodename);
 }
 
 void print_kernel_release()
 {
-  fprintf(stdout, "%s ",KVERSION);
+  fprintf(stdout, "%s ",u.release);
 }
 
 void print_kernel_version()
 {
-  fprintf(stdout, "%s %s ",DATE,TIME);
+  fprintf(stdout, "%s ",u.version);
 }
 
 void print_machine()
 {
-  fprintf(stdout, "i686 ");
+  fprintf(stdout, "%s ",u.machine);
 }
 
 void print_processor()
 {
-  fprintf(stdout, "Unknown ");
+  fprintf(stdout, "%s ",u.machine);
 }
 
 void print_hardware_platform()
 {
-  fprintf(stdout, "Unknown ");
+  fprintf(stdout, "%s ",u.machine);
 }
 
 void print_operating_system()
@@ -83,8 +85,9 @@ enum {
 
 int main(int argc, char** argv)
 {
-  args = KERNEL_NAME;
+  uname(&u);
   int i = 1;
+  args = KERNEL_NAME;
   for (; i<argc; ++i)
   {
     if (!strcmp("-a", argv[i]) || !strcmp("--all", argv[i]))
@@ -94,49 +97,50 @@ int main(int argc, char** argv)
     }
     if (!strcmp("-s", argv[i]) || !strcmp("--kernel-name", argv[i]))
     {
-      args |= KERNEL_NAME;
+      args = KERNEL_NAME;
       continue;
     }
     if (!strcmp("-n", argv[i]) || !strcmp("--node-name", argv[i]))
     {
-      args |= NODE_NAME;
+      args = NODE_NAME;
       continue;
     }
     if (!strcmp("-r", argv[i]) || !strcmp("--kernel-release", argv[i]))
     {
-      args |= KERNEL_RELEASE;
+      args = KERNEL_RELEASE;
       continue;
     }
     if (!strcmp("-v", argv[i]) || !strcmp("--kernel-version", argv[i]))
     {
-      args |= KERNEL_VERSION;
+      args = KERNEL_VERSION;
       continue;
     }
     if (!strcmp("-m", argv[i]) || !strcmp("--machine", argv[i]))
     {
-      args |= MACHINE;
+      args = MACHINE;
       continue;
     }
     if (!strcmp("-p", argv[i]) || !strcmp("--processor", argv[i]))
     {
-      args |= PROCESSOR;
+      args = PROCESSOR;
       continue;
     }
     if (!strcmp("-i", argv[i]) || !strcmp("--hardware-platform", argv[i]))
     {
-      args |= HARDWARE_PLATFORM;
+      args = HARDWARE_PLATFORM;
       continue;
     }
     if (!strcmp("-o", argv[i]) || !strcmp("--operating-system", argv[i]))
     {
-      args |= OPERATING_SYSTEM;
+      args = OPERATING_SYSTEM;
       continue;
     }
     if (!strcmp("--help", argv[i]))
     {
-      args |= HELP;
+      args = HELP;
       continue;
     }
+
 
     print_help();
     exit(0);
